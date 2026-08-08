@@ -1,1 +1,2 @@
-# errorbar\n\nStatistically rigorous regression testing for AI agents.
+# errorbar  
+Statistically rigorous regression testing for AI agents.
