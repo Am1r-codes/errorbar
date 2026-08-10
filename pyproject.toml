@@ -1,17 +1,114 @@
 [project]
 name = "errorbar"
 version = "0.1.0"
-description = "Add your description here"
+description = "Statistically rigorous regression testing for AI agents."
 readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [
     { name = "Am1r-codes", email = "amir.akkam@student.uva.nl" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Typing :: Typed",
+]
+dependencies = [
+    "numpy>=2.0",
+    "scipy>=1.14",
+    "typer>=0.12",
+    "rich>=13.7",
+]
 
 [project.scripts]
-errorbar = "errorbar:main"
+errorbar = "errorbar.cli:app"
+
+[project.urls]
+Repository = "https://github.com/Am1r-codes/errorbar"
 
 [build-system]
 requires = ["uv_build>=0.12.3,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+
+# ---------------------------------------------------------------------------
+# ruff
+# ---------------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "SIM",    # flake8-simplify
+    "RUF",    # ruff-specific
+    "ANN",    # flake8-annotations
+    "D",      # pydocstyle
+    "NPY",    # numpy-specific
+    "T20",    # flake8-print (no print in library code)
+]
+ignore = [
+    "D105",   # missing docstring in magic method
+    "D107",   # missing docstring in __init__ (documented on the class)
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# Tests do not need module/function docstrings or annotated test functions.
+"tests/**/*.py" = ["D100", "D103", "ANN201"]
+# The CLI is the one place rich/typer output is allowed.
+"src/errorbar/cli.py" = ["T20"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+# ---------------------------------------------------------------------------
+# mypy
+# ---------------------------------------------------------------------------
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src/errorbar"]
+strict = true
+warn_unreachable = true
+warn_no_return = true
+show_error_codes = true
+pretty = true
+
+[[tool.mypy.overrides]]
+# scipy ships no complete stubs; everything else must stay strictly typed.
+module = ["scipy.*"]
+ignore_missing_imports = true
+
+# ---------------------------------------------------------------------------
+# pytest
+# ---------------------------------------------------------------------------
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+# Slow coverage simulations are opt-in: `pytest -m slow` to run them.
+addopts = "-ra --strict-markers --strict-config -m 'not slow'"
+markers = [
+    "slow: long-running coverage simulations (deselected by default)",
+]
