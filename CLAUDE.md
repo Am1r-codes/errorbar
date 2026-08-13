@@ -8,26 +8,48 @@ Built by Amir (2nd-year BSc AI, University of Amsterdam) as a learning project *
 
 ## THE LEARNING CONTRACT — read this before every task
 
-**Amir writes all statistical and decision logic by hand. This is non-negotiable and it is the point of the project.**
+**Amir types the code. Claude does not write implementations for him.**
 
-### Do NOT implement these — refuse and redirect
+The rule is about authorship, not about avoiding libraries. Importing scipy,
+numpy, typer, or rich is expected and encouraged — reinventing `norm.ppf` or
+`ttest_ind` teaches nothing and risks numerical bugs. What matters is that the
+logic in this repo was written by Amir, not generated.
 
-Any function in `src/errorbar/stats/` (`intervals.py`, `gate.py`, `power.py`), and the gate decision rules anywhere. If asked to write one of these, **do not produce the implementation.** Instead offer, in this order:
+### Do NOT write implementation code for these
 
-1. **Write the failing test** — the fixture, the assertion, the edge cases. Show what correct looks like without showing how to get there.
-2. **Explain the algorithm** in prose or math. Formulas and step-by-step procedure are fine; working code is not.
-3. **Review code he already wrote** — correctness, numerical stability, edge cases, vectorization.
-4. **Ask a leading question** if he's close but stuck on a specific line.
+Anything in `src/errorbar/stats/`, the gate decision rules, and the verdict
+policy. If asked to implement one, do not produce the code. Offer instead, in
+this order:
 
-This applies even if he asks directly, even if he says it's fine, even if it's late and he's tired. He set this rule while thinking clearly. Hold it.
+1. **Write the failing test** — fixture, assertions, edge cases. Show what
+   correct looks like without showing how to reach it.
+2. **Explain the algorithm** in prose or math. Formulas, procedures, and
+   pointers to the right library function are fine; working code is not.
+3. **Review code he already wrote** — correctness, numerical stability, edge
+   cases, vectorization.
+4. **Ask a leading question** if he's close but stuck on one line.
 
-**Escape hatch:** if he says he's been stuck on the same bug for more than 20 minutes and asks for a direct answer, give it — then explain *why* it was wrong, so the debugging still teaches something.
+This holds even if he asks directly, even if it's late. He set this rule while
+thinking clearly.
 
-### DO implement these freely
+**Escape hatch:** if he says he's been stuck on the same bug for more than 20
+minutes and wants a direct answer, give it — then explain why it was wrong so
+the debugging still teaches something.
 
-Scaffold, `pyproject.toml`, `ruff`/`mypy` config, GitHub Actions workflows, `rich`/`typer` CLI plumbing and table formatting, JSON serialization, test skeletons and synthetic fixture *data*, docstring formatting, README structure, and debugging assistance on stack traces.
+### One algorithm that must be hand-written, not delegated to a library
 
-**The test:** does writing this teach him something he needs in Blok 1 Statistics or in an interview? Yes → his hands. No → yours.
+The two-level clustered bootstrap resampling loop. `scipy.stats.bootstrap` does
+not do clustered resampling, and that resampling *is* the product. Use scipy for
+`norm.ppf`, `norm.cdf`, `ttest_ind`, and percentile computation inside it.
+
+### DO write these freely
+
+Scaffold, pyproject/ruff/mypy config, GitHub Actions, typer plumbing, rich table
+formatting, JSON serialization, test skeletons, synthetic fixture data, docstring
+formatting, README structure, and debugging help on stack traces.
+
+**The test:** does typing this teach him something he needs in Blok 1 Statistics
+or in an interview? Yes → his hands. No → yours.
 
 ---
 
