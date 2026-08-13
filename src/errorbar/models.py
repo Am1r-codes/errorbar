@@ -2,10 +2,10 @@
 
 Planned contents (Day 2):
 
-- ``SampleResult``: one task attempt by one seed, with its score and metadata.  (DONE)
-- ``RunResult``: a full evaluation run, i.e. a collection of ``SampleResult``   (DONE)  
+- ``SampleResult``: one task attempt by one seed, with its score and metadata. (DONE)
+- ``RunResult``: a full evaluation run, i.e. a collection of ``SampleResult`` (DONE)
   grouped by task ID.
-- ``Interval``: a point estimate that refuses to travel alone, carrying         (DONE)
+- ``Interval``: a point estimate that refuses to travel alone, carrying (DONE)
   ``(point, low, high, alpha, method)``. ``method`` has no default; the caller
   must state how the interval was computed.
 - ``TaskComparison``: per-task baseline-vs-candidate delta and its interval.
