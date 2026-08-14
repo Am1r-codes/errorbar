@@ -7,16 +7,16 @@ Day 1 is 2026-08-10, the tag is Day 21 (2026-08-30), so Day N falls on August (9
 A stub past its due date is no longer a plan, it is clutter. Update this table at the
 end of each session; anything still `stub` below its due date is a slip, not a backlog.
 
-| File                        | Due            | Status |
-| --------------------------- | -------------- | ------ |
-| `models.py`                 | Day 2 (Aug 11) | stub   |
-| `stats/intervals.py`        | Days 3-11      | stub   |
-| `tests/test_coverage.py`    | Day 10 (Aug 19)| stub   |
-| `stats/gate.py`             | Days 12, 15    | stub   |
-| `stats/power.py`            | Day 16 (Aug 25)| stub   |
-| `cli.py` `compare` body     | Day 17 (Aug 26)| stub   |
-| `fixtures.py`               | Day 18 (Aug 27)| stub   |
-| `docs/METHODOLOGY.md`       | rolling        | outline|
+| File                     | Due            | Status        |
+| ------------------------ | -------------- | --------------|
+| `models.py`              | Day 2 (Aug 11) | done (Aug 13) |
+| `stats/intervals.py`     | Days 3-11      | stub          |
+| `tests/test_coverage.py` | Day 10 (Aug 19)| stub          |
+| `stats/gate.py`          | Days 12, 15    | stub          |
+| `stats/power.py`         | Day 16 (Aug 25)| stub          |
+| `cli.py` `compare` body  | Day 17 (Aug 26)| stub          |
+| `fixtures.py`            | Day 18 (Aug 27)| stub          |
+| `docs/METHODOLOGY.md`    | rolling        | outline       |
 
 ## 2026-08-10 — Day 1: scaffold
 
@@ -31,3 +31,19 @@ end of each session; anything still `stub` below its due date is a slip, not a b
   `tests/test_models.py`.
 - Unclear: nothing blocking. Watch that the three skipped placeholder tests get replaced
   by real ones rather than accumulating.
+
+
+## 2026-08-13 — Day 2 (2 days late): models
+
+- Changed: `models.py` implemented by hand — `SampleResult` (task_id, seed, score,
+  passed), `RunResult` (run_id, samples, plus `task_ids()`, `scores_for_task()`,
+  `mean_by_task()`), and `Interval` (point, low, high, alpha, method) with
+  `__post_init__` validation. Design decisions made and defended: `mean_by_task` is a
+  method not a cached field (measurement and interpretation stay separate);
+  `scores_for_task` raises KeyError on an unknown task rather than returning an empty
+  list (silent empties become nan deep in the bootstrap); `task_ids()` returns sorted
+  for determinism; alpha bounds are exclusive, point bounds inclusive. No numpy in
+  models — `sum(x)/len(x)` keeps it a pure data module.
+- Next: Day 3 — percentile bootstrap in `stats/intervals.py`.
+- Unclear: nothing blocking. Running one day behind on errorbar; DSA and ML tracks
+  are on schedule.
