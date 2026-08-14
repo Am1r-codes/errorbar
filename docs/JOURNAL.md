@@ -7,16 +7,16 @@ Day 1 is 2026-08-10, the tag is Day 21 (2026-08-30), so Day N falls on August (9
 A stub past its due date is no longer a plan, it is clutter. Update this table at the
 end of each session; anything still `stub` below its due date is a slip, not a backlog.
 
-| File                     | Due            | Status        |
-| ------------------------ | -------------- | --------------|
-| `models.py`              | Day 2 (Aug 11) | done (Aug 13) |
-| `stats/intervals.py`     | Days 3-11      | stub          |
-| `tests/test_coverage.py` | Day 10 (Aug 19)| stub          |
-| `stats/gate.py`          | Days 12, 15    | stub          |
-| `stats/power.py`         | Day 16 (Aug 25)| stub          |
-| `cli.py` `compare` body  | Day 17 (Aug 26)| stub          |
-| `fixtures.py`            | Day 18 (Aug 27)| stub          |
-| `docs/METHODOLOGY.md`    | rolling        | outline       |
+| File                     | Due            | Status           |
+| ------------------------ | -------------- | -----------------|
+| `models.py`              | Day 2 (Aug 11) | done (Aug 13)    |
+| `stats/intervals.py`     | Days 3-11      | partial (Aug 14) |
+| `tests/test_coverage.py` | Day 10 (Aug 19)| stub             |
+| `stats/gate.py`          | Days 12, 15    | stub             |
+| `stats/power.py`         | Day 16 (Aug 25)| stub             |
+| `cli.py` `compare` body  | Day 17 (Aug 26)| stub             |
+| `fixtures.py`            | Day 18 (Aug 27)| stub             |
+| `docs/METHODOLOGY.md`    | rolling        | outline          |
 
 ## 2026-08-10 — Day 1: scaffold
 
@@ -47,3 +47,14 @@ end of each session; anything still `stub` below its due date is a slip, not a b
 - Next: Day 3 — percentile bootstrap in `stats/intervals.py`.
 - Unclear: nothing blocking. Running one day behind on errorbar; DSA and ML tracks
   are on schedule.
+
+## 2026-08-14 — Day 3: intervals
+
+- Changed: `percentile_bootstrap` in `stats/intervals.py`, hand-written.
+  Method string built from `n_resamples` rather than hardcoded, so a 2000-resample call can't claim 10000.
+  `ValueError` at n < 2 rather than a zero-width interval. Five tests including
+  a coarse-support case documenting why seeds converge at n=5.
+- Next: Day 4 — `wilson_interval`, closed form. The k=5, n=5 test is the point of it.
+- Unclear: nothing blocking. Nothing yet proves the function reads the `rng`
+  it's handed rather than a hardcoded one — Day 5's determinism audit covers it.
+
