@@ -7,16 +7,16 @@ Day 1 is 2026-08-10, the tag is Day 21 (2026-08-30), so Day N falls on August (9
 A stub past its due date is no longer a plan, it is clutter. Update this table at the
 end of each session; anything still `stub` below its due date is a slip, not a backlog.
 
-| File                     | Due            | Status           |
-| ------------------------ | -------------- | -----------------|
-| `models.py`              | Day 2 (Aug 11) | done (Aug 13)    |
-| `stats/intervals.py`     | Days 3-11      | partial (Aug 14) |
-| `tests/test_coverage.py` | Day 10 (Aug 19)| stub             |
-| `stats/gate.py`          | Days 12, 15    | stub             |
-| `stats/power.py`         | Day 16 (Aug 25)| stub             |
-| `cli.py` `compare` body  | Day 17 (Aug 26)| stub             |
-| `fixtures.py`            | Day 18 (Aug 27)| stub             |
-| `docs/METHODOLOGY.md`    | rolling        | outline          |
+| File                     | Due            | Status                               |
+| ------------------------ | -------------- | -------------------------------------|
+| `models.py`              | Day 2 (Aug 11) | done (Aug 13)                        |
+| `stats/intervals.py`     | Days 3-11      | partial (percentile + wilson Aug 15) |
+| `tests/test_coverage.py` | Day 10 (Aug 19)| stub                                 |
+| `stats/power.py`         | Day 16 (Aug 25)| stub                                 |
+| `cli.py` `compare` body  | Day 17 (Aug 26)| stub                                 |
+| `fixtures.py`            | Day 18 (Aug 27)| stub                                 |
+| `docs/METHODOLOGY.md`    | rolling        | outline                              |
+| `stats/gate.py`          | Days 12, 15    | stub                                 |
 
 ## 2026-08-10 — Day 1: scaffold
 
@@ -58,3 +58,13 @@ end of each session; anything still `stub` below its due date is a slip, not a b
 - Unclear: nothing blocking. Nothing yet proves the function reads the `rng`
   it's handed rather than a hardcoded one — Day 5's determinism audit covers it.
 
+## 2026-08-15 — Day 3: intervals
+
+- Changed: `wilson_interval` in `stats/intervals.py`. Closed-form, no rng —
+  deterministic by construction. Boundary correction at k=0 and k=n substitutes the exact
+  algebraic result for the float-drifted one; verified by watching 
+  `test_wilson_point_always_inside` fail without it. Seven tests including the Wald-
+  collapse comparison and the symmetry invariant.
+- Next: Day 5 determinism audit — every stochastic function takes an explicit rng,
+  no module-level state. That plus this clears the Week 1 gate.
+- Unclear: whether the domain still interests me. Deciding tomorrow with Week 1 finished, not tonight.
