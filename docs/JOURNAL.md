@@ -58,7 +58,7 @@ end of each session; anything still `stub` below its due date is a slip, not a b
 - Unclear: nothing blocking. Nothing yet proves the function reads the `rng`
   it's handed rather than a hardcoded one — Day 5's determinism audit covers it.
 
-## 2026-08-15 — Day 3: intervals
+## 2026-08-15 — Day 4: intervals
 
 - Changed: `wilson_interval` in `stats/intervals.py`. Closed-form, no rng —
   deterministic by construction. Boundary correction at k=0 and k=n substitutes the exact
@@ -68,3 +68,26 @@ end of each session; anything still `stub` below its due date is a slip, not a b
 - Next: Day 5 determinism audit — every stochastic function takes an explicit rng,
   no module-level state. That plus this clears the Week 1 gate.
 - Unclear: whether the domain still interests me. Deciding tomorrow with Week 1 finished, not tonight.
+
+## 2026-08-16 — Day 7: randomness audit
+
+- Changed: audited all `np.random`, `random.`, `default_rng`, and `seed` hits under `src/errorbar/` and `tests/`; no module-level RNG,
+  no generator created inside a function, and no `rng` parameter with a default value was found in the library.
+  Tests pass in explicit `default_rng(seed)` form, with no bare generator creation.
+  Wrote tests/test_determinism.py — four tests pinning the contract for future work: same-seed reproducibility,
+  deterministic functions stable across calls with no seed at all, bit-generator state advancing to
+  prove the passed-in rng is genuinely consumed, and a signature check that rejects any function whose rng parameter carries a default.
+  Proved the signature test can fail by temporarily defaulting rng on percentile_bootstrap and watching it go red.
+- Next: keep the current discipline while implementing the remaining stochastic functions:
+  every new random path must accept an explicit `rng` and never hide the seed.
+- Unclear: whether errorbar's domain holds my interest. Week 1 is closed, so deciding tonight rather than carrying it.
+  The statistics port to neuro/medical eval if the answer is no — clustered data,
+  coverage, paired comparison are the same machinery.
+
+## Week 1 gate (Aug 16)
+
+- installs from clean clone: PASS (13 passed from /tmp clone)
+- CI green, all five checks: PASS
+- two interval methods: PASS (percentile bootstrap, Wilson)
+- determinism enforced by test: PASS (tests/test_determinism.py, 4 tests)
+Verdict: PASS — all four criteria met, two days late.
