@@ -1,7 +1,7 @@
 [project]
 name = "errorbar"
 version = "0.1.0"
-description = "Statistically rigorous regression testing for AI agents."
+description = "Confidence interval methods for stochastic evaluation data."
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
