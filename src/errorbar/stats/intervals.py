@@ -1,6 +1,6 @@
 """Confidence interval estimators.
 
-Planned contents (Days 3, 4, 8, 9, 11):
+Implemented:
 
 - ``wilson_interval``: score interval for a binomial proportion. Preferred over
   the Wald interval, which has badly degraded coverage at small ``n`` and at
@@ -8,10 +8,14 @@ Planned contents (Days 3, 4, 8, 9, 11):
   Source: Wilson (1927), "Probable Inference, the Law of Succession, and
   Statistical Inference", JASA 22(158). Unlike the Wald interval, its standard
   error uses the hypothesized proportion rather than ``p̂``, so it never
-  collapses at the boundary when the observed rate is 0 or 1.
+  collapses at the boundary when the observed rate is 0 or 1. Closed-form, so
+  it takes no ``rng``.
 
 - ``percentile_bootstrap``: the plain percentile bootstrap, as the baseline
   resampling estimator and the reference the other methods are checked against.
+  Stochastic, so it takes an explicit ``rng``.
+
+Deferred (see ``docs/JOURNAL.md``):
 
 - ``clustered_bootstrap``: resamples whole tasks rather than individual samples.
   Repeated seeds on the same task are correlated, so resampling samples
@@ -22,9 +26,15 @@ Planned contents (Days 3, 4, 8, 9, 11):
   skewed sampling distributions that show up near the pass-rate boundaries.
   Source: Efron & Tibshirani (1993), "An Introduction to the Bootstrap", ch. 14.
 
-Every estimator here returns an ``Interval`` and takes an explicit ``rng``.
-Empirical coverage of a nominal 95% interval must land in [0.92, 0.97]; see
-``tests/test_coverage.py``.
+Every estimator here returns an ``Interval``. Stochastic estimators take an
+explicit ``rng`` and never create one internally; deterministic ones take no
+``rng`` at all. ``tests/test_determinism.py`` rejects any function here whose
+``rng`` parameter carries a default, and checks that a generator handed to a
+stochastic estimator is genuinely consumed.
+
+Empirical coverage has NOT been validated: ``tests/test_coverage.py`` is an
+unwritten placeholder. See the "What is not validated" section of
+``docs/METHODOLOGY.md``.
 """
 
 from collections.abc import Sequence
@@ -50,7 +60,7 @@ def percentile_bootstrap(
     arr = np.asarray(values, dtype=float)
     n = len(arr)
     if n < 2:
-        raise ValueError(f"there must be more than 2 values in n: there is {n} right now.")
+        raise ValueError(f"percentile_bootstrap needs at least 2 values, got {n}")
     vals_mean = float(np.mean(arr))
 
     boot_means = np.empty(n_resamples)

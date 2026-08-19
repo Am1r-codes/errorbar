@@ -17,6 +17,7 @@ the project is picked back up.
 | `stats/intervals.py`        | Days 3-11       | partial (percentile + wilson Aug 15) |
 | `tests/test_determinism.py` | Day 5 (Aug 14)  | done (Aug 16)                        |
 | `docs/METHODOLOGY.md`       | rolling         | done (Aug 19, two methods shipped)   |
+| `tests/test_models.py`      | Day 2 (Aug 11)  | done (Aug 19, v0.1.1)                |
 | `tests/test_coverage.py`    | Day 10 (Aug 19) | deferred                             |
 | `stats/gate.py`             | Days 12, 15     | deferred                             |
 | `stats/power.py`            | Day 16 (Aug 25) | deferred                             |
@@ -112,3 +113,43 @@ this a real contribution. Revisit in Blok 1 alongside Statistics & Probability, 
 decide after the EEG litmus test.
 
 Hours: ~17 in week 1 against 42 planned. The six-hour day was never real.
+
+## 2026-08-19 — Day 10 (later): v0.1.1, documentation-vs-code contradictions
+
+Review of the v0.1.0 tag found four places where the docs and the code disagreed.
+All four were the same failure as the old README, just smaller and closer to the
+source.
+
+- `stats/intervals.py` module docstring claimed "every estimator takes an explicit
+  `rng`". Wilson takes none, deliberately, and METHODOLOGY.md said so correctly.
+  The two documents contradicted each other and the wrong one was the one sitting
+  next to the code. Rewritten: implemented vs deferred, and the rng rule now states
+  what `test_determinism.py` actually enforces — that no `rng` parameter carries a
+  default — rather than the stronger thing it does not check.
+- `percentile_bootstrap` raised "there must be more than 2 values" on a `n < 2`
+  check, so it named the wrong boundary. Now "needs at least 2 values, got {n}".
+  The Wilson messages were fixed on Day 4; this one was missed.
+- `tests/test_intervals.py` still carried its Day 1 placeholder docstring, listing
+  `clustered_bootstrap` tests above twelve real ones. Replaced with a description of
+  what is actually tested. `test_coverage.py` and `test_gate.py` keep their
+  placeholders, correctly — those files are genuinely unbuilt.
+
+The fourth was worse. `test_models.py` had one test, and it asserted `__version__`.
+`models.py` shipped in v0.1.0 with zero tests covering any of the five design
+decisions defended on Day 2, under a docstring promising four tests that did not
+exist. The Day 1 entry warned about precisely this — "watch that the three skipped
+placeholder tests get replaced by real ones rather than accumulating" — and it
+happened anyway, unnoticed for six days.
+
+Written now: 17 tests over Interval validation (method required, bound checks,
+inclusive point bounds, exclusive alpha bounds), frozen-ness of all three models,
+and the RunResult contracts (sorted unique task IDs, KeyError on unknown task,
+sorted scores, mean_by_task). Each was mutation-checked — inclusive alpha bounds,
+an unfrozen SampleResult, and `scores_for_task` returning `[]` instead of raising
+each made the relevant test go red before the source was restored. 34 tests now.
+
+The promised JSON round-trip test was not written, because there is nothing to
+test: `models.py` has no serialization at all. That line was promising a test for
+unbuilt functionality. Removed from the docstring and noted there instead.
+
+Not fixed: coverage validation. Still the largest gap, still deliberately deferred.

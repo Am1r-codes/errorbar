@@ -1,14 +1,21 @@
 """Tests for the interval estimators.
 
-To come alongside Days 3, 4, 8, 9, 11:
+Covers the two estimators that shipped in v0.1:
 
-- ``wilson_interval`` matches published values at the textbook cases, and stays
-  inside [0, 1] at p = 0 and p = 1 where Wald escapes the unit interval.
-- Every estimator returns an ``Interval`` whose ``method`` is set.
-- Determinism: the same ``rng`` seed produces byte-identical output.
-- ``clustered_bootstrap`` yields wider intervals than ``percentile_bootstrap``
-  on the same correlated data -- if it does not, the clustering is not working.
-- Degenerate inputs: a single task, a single seed, zero variance.
+- ``wilson_interval`` matches published values at all six cases for n=5, holds
+  its symmetry invariant, keeps ``point`` inside the interval at every k for
+  n in (5, 20, 100), widens as alpha shrinks, and rejects invalid counts.
+  ``test_wilson_survives_where_wald_collapses`` is the reason the function
+  exists: Wald has width exactly 0.0 at 5/5 where Wilson still spans a real
+  interval.
+- ``percentile_bootstrap`` puts ``point`` inside the interval, reports its own
+  resample count in ``method``, widens on wider data, varies with the seed on
+  continuous data, and raises below n=2.
+
+Determinism is tested separately, in ``tests/test_determinism.py``.
+
+Tests for ``clustered_bootstrap`` and the BCa correction are not here because
+those estimators are deferred; see ``docs/JOURNAL.md``.
 """
 
 from math import sqrt

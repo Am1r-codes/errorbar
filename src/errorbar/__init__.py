@@ -12,6 +12,6 @@ CLI, and power analysis are deferred -- see ``docs/JOURNAL.md``.
 Nothing is re-exported here yet; import from ``errorbar.stats.intervals``.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = ["__version__"]
