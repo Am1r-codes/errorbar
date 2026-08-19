@@ -1,10 +1,13 @@
 """Command-line interface.
 
-Planned contents (Day 17): the ``compare`` command loads two run files, runs the
-gate, renders the verdict as a rich table, and exits with an ``ExitCode`` the CI
-system can read.
+v0.1 ships no working command. ``compare`` depends on the gate, which is not
+implemented, so it refuses with ``ExitCode.NOT_IMPLEMENTED`` rather than
+pretending to have an opinion. The interval estimators are usable as a library;
+see the README.
 
-Only the command surface exists so far; the commands themselves are stubs.
+Deferred (was Day 17): ``compare`` loads two run files, runs the gate, renders
+the verdict as a rich table, and exits with an ``ExitCode`` the CI system can
+read.
 """
 
 from __future__ import annotations
@@ -30,17 +33,22 @@ class ExitCode(IntEnum):
     borderline result, which is precisely the kind of quiet lie this tool exists
     to prevent. Leaving 1 and 2 to click keeps "the tool broke" and "the tool
     has an opinion" in disjoint ranges.
+
+    ``NOT_IMPLEMENTED`` sits in a third range for the same reason: "this tool
+    has nothing built to answer you with" is neither a crash nor a verdict, and
+    a CI system must never read it as one.
     """
 
     PASS = 0
     FAIL = 10
     WARN = 11
     UNDERPOWERED = 12
+    NOT_IMPLEMENTED = 20
 
 
 app = typer.Typer(
     name="errorbar",
-    help="Tell whether a regression in an AI agent's eval scores is real or noise.",
+    help="Confidence interval methods for stochastic evaluation data.",
     no_args_is_help=True,
     add_completion=False,
 )
@@ -65,10 +73,10 @@ def main(
         ),
     ] = False,
 ) -> None:
-    """Statistically rigorous regression testing for AI agents."""
+    """Confidence interval methods for stochastic evaluation data."""
 
 
-@app.command()
+@app.command(short_help="Not implemented in v0.1 (exits 20).")
 def compare(
     baseline: Annotated[
         Path,
@@ -81,10 +89,19 @@ def compare(
 ) -> None:
     """Compare two evaluation runs and report whether the difference is real.
 
-    Exits 0 on PASS, 10 on FAIL, 11 on WARN, 12 on UNDERPOWERED. Codes 1 and 2
-    belong to click and mean the invocation itself was wrong.
+    Not implemented in v0.1: always exits 20. The gate this command reads its
+    verdict from does not exist yet, and a command that returns PASS without
+    having run a comparison is worse than no command at all.
     """
-    raise NotImplementedError("compare is not implemented yet; see stats/gate.py")
+    typer.secho(
+        "errorbar compare is not implemented in v0.1 "
+        f"(would have compared {baseline} against {candidate}).\n"
+        "v0.1 ships the interval estimators as a library only; "
+        "see the Status section of the README.",
+        err=True,
+        fg=typer.colors.YELLOW,
+    )
+    raise typer.Exit(code=ExitCode.NOT_IMPLEMENTED)
 
 
 if __name__ == "__main__":

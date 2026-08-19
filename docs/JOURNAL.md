@@ -7,16 +7,21 @@ Day 1 is 2026-08-10, the tag is Day 21 (2026-08-30), so Day N falls on August (9
 A stub past its due date is no longer a plan, it is clutter. Update this table at the
 end of each session; anything still `stub` below its due date is a slip, not a backlog.
 
-| File                     | Due            | Status                               |
-| ------------------------ | -------------- | -------------------------------------|
-| `models.py`              | Day 2 (Aug 11) | done (Aug 13)                        |
-| `stats/intervals.py`     | Days 3-11      | partial (percentile + wilson Aug 15) |
-| `tests/test_coverage.py` | Day 10 (Aug 19)| stub                                 |
-| `stats/power.py`         | Day 16 (Aug 25)| stub                                 |
-| `cli.py` `compare` body  | Day 17 (Aug 26)| stub                                 |
-| `fixtures.py`            | Day 18 (Aug 27)| stub                                 |
-| `docs/METHODOLOGY.md`    | rolling        | outline                              |
-| `stats/gate.py`          | Days 12, 15    | stub                                 |
+Closed out at v0.1.0 (Aug 19). Nothing is `stub` any more: it either shipped or it is
+`deferred`, which means it is out of scope for this version and has no due date until
+the project is picked back up.
+
+| File                        | Due             | Status                               |
+| --------------------------- | --------------- | ------------------------------------ |
+| `models.py`                 | Day 2 (Aug 11)  | done (Aug 13)                        |
+| `stats/intervals.py`        | Days 3-11       | partial (percentile + wilson Aug 15) |
+| `tests/test_determinism.py` | Day 5 (Aug 14)  | done (Aug 16)                        |
+| `docs/METHODOLOGY.md`       | rolling         | done (Aug 19, two methods shipped)   |
+| `tests/test_coverage.py`    | Day 10 (Aug 19) | deferred                             |
+| `stats/gate.py`             | Days 12, 15     | deferred                             |
+| `stats/power.py`            | Day 16 (Aug 25) | deferred                             |
+| `cli.py` `compare` body     | Day 17 (Aug 26) | deferred (exits 20, not implemented) |
+| `fixtures.py`               | Day 18 (Aug 27) | deferred                             |
 
 ## 2026-08-10 — Day 1: scaffold
 
@@ -31,7 +36,6 @@ end of each session; anything still `stub` below its due date is a slip, not a b
   `tests/test_models.py`.
 - Unclear: nothing blocking. Watch that the three skipped placeholder tests get replaced
   by real ones rather than accumulating.
-
 
 ## 2026-08-13 — Day 2 (2 days late): models
 
@@ -62,7 +66,7 @@ end of each session; anything still `stub` below its due date is a slip, not a b
 
 - Changed: `wilson_interval` in `stats/intervals.py`. Closed-form, no rng —
   deterministic by construction. Boundary correction at k=0 and k=n substitutes the exact
-  algebraic result for the float-drifted one; verified by watching 
+  algebraic result for the float-drifted one; verified by watching
   `test_wilson_point_always_inside` fail without it. Seven tests including the Wald-
   collapse comparison and the symmetry invariant.
 - Next: Day 5 determinism audit — every stochastic function takes an explicit rng,
@@ -91,3 +95,20 @@ end of each session; anything still `stub` below its due date is a slip, not a b
 - two interval methods: PASS (percentile bootstrap, Wilson)
 - determinism enforced by test: PASS (tests/test_determinism.py, 4 tests)
 Verdict: PASS — all four criteria met, two days late.
+
+## 2026-08-19 — Day 10: v0.1.0 tagged
+
+Shipped in 8 days: models with validation, percentile bootstrap, Wilson score interval,
+determinism contract, 17 tests, clean-clone install verified.
+
+Stopping at interval methods rather than the full gate. The statistics are the part I
+wanted and got — they port directly to evaluating EEG decoders, where trials within a
+subject are correlated the same way seeds within a task are. The domain isn't mine: the
+architecture came from a plan I didn't write, which is why I couldn't explain the tool for
+the first week.
+
+Not abandoned. Clustered bootstrap and coverage are the interesting half and would make
+this a real contribution. Revisit in Blok 1 alongside Statistics & Probability, or not —
+decide after the EEG litmus test.
+
+Hours: ~17 in week 1 against 42 planned. The six-hour day was never real.
